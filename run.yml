@@ -1,0 +1,6 @@
+- name: Run Roles
+  hosts: all  # You can replace 'all' with your specific group or host pattern
+  become: true
+
+  roles:
+    - role: pre-requisites

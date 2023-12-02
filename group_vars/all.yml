@@ -1,0 +1,6 @@
+master1_ip: "192.168.113.21"
+master1_hostname: "bbi-apache-node1.bbi.local"
+master2_ip: "192.168.113.22"
+master2_hostname: "bbi-apache-node2.bbi.local"
+master3_ip: "192.168.113.23"
+master3_hostname: "bbi-apache-node3.bbi.local"

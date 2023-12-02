@@ -1,0 +1,6 @@
+- name: Copy hosts file
+  template:
+    src: "../../group_templates/hosts.j2"
+    dest: "/etc/hosts"
+  become: true
+
