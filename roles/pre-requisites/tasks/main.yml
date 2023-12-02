@@ -1,6 +1,21 @@
+- name: Install packages using yum
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - git
+    - telnet
+    -
+
 - name: Copy hosts file
   template:
     src: "../../group_templates/hosts.j2"
     dest: "/etc/hosts"
   become: true
+
+- name: Set New Hostname as Fully Qualified Domain Name
+  hostname:
+    name: "{{ new_hostname }}"
+  become: yes
+  become_user: root
 
