@@ -1,10 +1,21 @@
 #### HOST DETAILS ####
 master1_ip: "192.168.113.21"
-master1_hostname: "bbi-apache-node1.bbi.local"
+master1_hostname: "masternode1.bbi.local"
 master2_ip: "192.168.113.22"
-master2_hostname: "bbi-apache-node2.bbi.local"
-master3_ip: "192.168.113.23"
-master3_hostname: "bbi-apache-node3.bbi.local"
+master2_hostname: "masternode2.bbi.local"
+data1_ip: "192.168.113.23"
+data1_hostname: "datanode1.bbi.local"
 
 #### NEW HOSTNAMES ####
 new_hostname: "{{ inventory_hostname_short }}.bbi.local"
+
+
+
+##### HTTPD SERVER DETAILS #####
+
+httpd_server: "192.168.113.23"
+httpd_port: "8080"
+
+#### JAVA VARIABLES ####
+webserver_base_folder: "bbi"
+
