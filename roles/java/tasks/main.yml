@@ -1,18 +1,65 @@
-- name: Create folder structure and copy JDK tar
-  file:
-    path: "/var/www/html/{{ webserver_base_folder }}/java"
-    state: directory
-    owner: apache
-    group: apache
+   - name: Create folder structure and copy JDK tar
+     file:
+       path: "/var/www/html/{{ webserver_base_folder }}/java"
+       state: directory
+       owner: apache
+       group: apache
 
-#- name: Copy JDK tar file
-#  copy:
-#    src: "files/jdk-8u202-linux-x64.tar.gz"
-#    dest: "/var/www/html/{{ webserver_base_folder }}/java/"
+   - name: Download Oracle JDK tarball (only on httpd_webserver)
+     get_url:
+        url: "https://download.oracle.com/otn-pub/java/jdk/{{ java_version }}-b08/{{ java_arch }}/jdk-{{ java_version }}-linux-x64.tar.gz"
+        dest: "{{ local_jdk_tar }}"
+        headers:
+          Cookie: "oraclelicense=accept-securebackup-cookie"
+        validate_certs: no
+     when: "'httpd_server' in group_names and inventory_hostname == 'datanode1'"
 
-- name: Set ownership for files and directories
-  file:
-    path: "/var/www/html"
-    state: directory
-    owner: apache
-    group: apache
+   - name: Copy JDK tarball to web server directory (only on httpd_server)
+     ansible.builtin.copy:
+        src: "{{ local_jdk_tar }}"
+        dest: "{{ java_web_server_path }}"
+     when: "'httpd_server' in group_names and inventory_hostname == 'datanode1'"
+
+   - name: Set ownership for files and directories
+     file:
+       path: "/var/www/html"
+       state: directory
+       owner: apache
+       group: apache
+       recurse: yes
+
+   - name: Download JDK tarball from web server
+     get_url:
+     url: "http://{{ httpd_server }}:{{ httpd_port }}/{{ web_server_path }}/jdk-{{ java_version }}-linux-x64.tar.gz"
+     dest: "{{ local_jdk_tar }}"
+#     when: "'httpd_server' in group_names and inventory_hostname != 'datanode1'"
+
+
+   - name: Untar JDK tarball
+     ansible.builtin.unarchive:
+        src: "{{ local_jdk_tar }}"
+        dest: "/opt/java/"
+        remote_src: yes
+
+   - name: Install Java with specific path
+     ansible.builtin.become_shell:
+        cmd: "update-alternatives --install /usr/bin/java java {{ java_home }}/bin/java 1"
+
+   - name: Configure Java
+     ansible.builtin.lineinfile:
+        path: /etc/profile
+        line: "{{ item }}"
+     with_items:
+        - "export JAVA_HOME={{ java_home }}"
+        - "export PATH=$PATH:$JAVA_HOME/bin"
+
+   - name: Set Java path for current session
+     ansible.builtin.become_shell:
+        cmd: "source /etc/profile"
+
+   - name: Remove JDK tar file from /tmp
+     ansible.builtin.file:
+        path: "{{ local_jdk_tar }}"
+        state: absent
+
+

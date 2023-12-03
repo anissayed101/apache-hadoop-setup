@@ -3,5 +3,4 @@
   become: true
 
   roles:
-    - role: all
-
+    - role: pre-requisites
