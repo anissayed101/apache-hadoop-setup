@@ -5,6 +5,7 @@
   loop:
     - git
     - telnet
+    - httpd
 
 - name: Copy hosts file
   template:

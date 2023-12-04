@@ -13,24 +13,19 @@ new_hostname: "{{ inventory_hostname_short }}.bbi.local"
 
 ##### HTTPD SERVER DETAILS #####
 
-httpd_server: "192.168.113.23"
+httpd_server: "192.168.113.22"
 httpd_port: "8080"
 
 #### JAVA VARIABLES ####
 webserver_folder: "/var/www/html"
 webserver_base_folder: "bbi"
-java_version: 8u202
-java_arch: x64
-java_home: "/usr/lib/jvm/jdk{{ java_version }}"
-
-
-
-java_version: 8u202
+java_version_number: "8u202"
+java_version: 1.8.0_202
 java_arch: x64
 java_base: "/usr/lib/jvm"
 java_home: "{{ java_base }}/jdk{{ java_version }}"
 oracle_jdk_url: "https://download.oracle.com/otn-pub/java/jdk/{{ java_version }}-b08/{{ java_arch }}/jdk-{{ java_version }}-linux-x64.tar.gz"
 local_jdk_tar: "/tmp/jdk-{{ java_version }}-linux-x64.tar.gz"
-webserver_java_folder: "{{ webserver_folder }}/{{ webserver_base_folder }}/java"
+webserver_java_folder: "{{ webserver_base_folder }}/java"
 java_web_server_path: "{{ webserver_java_folder }}"
 

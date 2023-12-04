@@ -8,14 +8,12 @@
        path: /etc/httpd/conf/httpd.conf
        regexp: '^Listen '
        line: 'Listen 8080'
-     notify: Restart httpd
  
    - name: Create test page
      copy:
        content: |
          Hello, this is the test page for Apache Hadoop private repository.
        dest: /var/www/html/index.html
-     notify: Restart httpd
     
    - name: Start and enable Apache service
      service:

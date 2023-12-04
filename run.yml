@@ -4,3 +4,6 @@
 
   roles:
     - role: pre-requisites
+    - role: httpd-server
+    - role: java
+
