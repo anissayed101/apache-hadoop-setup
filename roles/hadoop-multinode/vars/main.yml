@@ -1,0 +1,33 @@
+# General Hadoop Configuration
+hadoop_dir: "/opt/hadoop"
+
+# Core-site.xml Configuration
+ core_site_vars:
+   fs_default_name: "hdfs://{{ namenode1_host }}:{{ namenode1_port }}"
+     hadoop_tmp_dir: "{{ hadoop_dir }}/tmp"
+
+
+### HDFS Site Variables
+hdfs_site_vars:
+  dfs_nameservices: "mycluster"
+  dfs_ha_namenodes: "nn1,nn2"
+  dfs_namenode_rpc_address_nn1: "{{ namenode1_host }}:8020"
+  dfs_namenode_rpc_address_nn2: "{{ namenode2_host }}:8020"
+  dfs_namenode_http_address_nn1: "{{ namenode1_host }}:50070"
+  dfs_namenode_http_address_nn2: "{{ namenode2_host }}:50070"
+  dfs_namenode_shared_edits_dir: "qjournal://{{ journalnode1_host }}:8485;{{ journalnode2_host }}:8485;{{ journalnode3_host }}:8485/mycluster"
+  dfs_journalnode_edits_dir: "{{ hadoop_dir }}/journal"
+
+
+### Zookeeper Configuration
+zoo_cfg_vars:
+  zookeeper_data_dir: "{{ hadoop_dir }}/zookeeper"
+  zookeeper_client_port: 2181
+  zookeeper_servers: "zookeeper1:2888:3888;zookeeper2:2888:3888;zookeeper3:2888:3888"
+
+### Namenode and Journal Node Hosts
+namenode1_host: "{{ groups['activenamenode'][0] | default('') }}"
+namenode2_host: "{{ groups['standbynamenode'][0] | default('') }}"
+journalnode1_host: "{{ groups['journalnode1'][0] | default('') }}"
+journalnode2_host: "{{ groups['journalnode2'][0] | default('') }}"
+journalnode3_host: "{{ groups['journalnode3'][0] | default('') }}"

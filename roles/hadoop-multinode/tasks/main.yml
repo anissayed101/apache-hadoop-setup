@@ -1,0 +1,37 @@
+   - name: Install Apache HTTP server
+     yum:
+       name: httpd
+       state: present
+
+   - name: Configure Apache to listen on port 8080
+     lineinfile:
+       path: /etc/httpd/conf/httpd.conf
+       regexp: '^Listen '
+       line: 'Listen 8080'
+ 
+   - name: Create test page
+     copy:
+       content: |
+         Hello, this is the test page for Apache Hadoop private repository.
+       dest: /var/www/html/index.html
+    
+   - name: Start and enable Apache service
+     service:
+       name: httpd
+       state: started
+       enabled: 'yes'
+  
+   - name: Restart Apache
+     service:
+       name: httpd
+       state: restarted
+
+   - name: Check webserver response with curl
+     command: curl -s http://{{ httpd_server }}:{{ httpd_port }}
+     register: curl_result
+
+   - name: Verify expected response
+     fail:
+       msg: "Unexpected response from webserver"
+     when: '"Hello, this is the test page for Apache Hadoop private repository" not in curl_result.stdout'
+
